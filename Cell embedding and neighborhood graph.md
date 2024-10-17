@@ -11,10 +11,11 @@ Yes, in the "Calculating the Neighborhood Graph and UMAP Embedding" step, the **
 
 The `cell_embedding` is, therefore, a **pre-computed lower-dimensional representation** of the cells that captures the relevant biological variation or relationships between cells in a more compact space compared to the original high-dimensional gene expression matrix.
 
-### 2. **Neighborhood Graph (K-Nearest Neighbors Graph)**
+### 2. **Neighborhood Graph (K-Nearest Neighbors Graph/ KNN)**
 - The **neighborhood graph** is constructed based on the `cell_embedding` and is fundamental to many downstream analysis techniques like UMAP and clustering.
 - **How it works**:
   - Each cell (represented as a point in the reduced-dimensional space, `cell_embedding`) finds its **nearest neighbors** based on some distance metric (typically Euclidean distance).
+  - The Leiden algorithm (a graph-clustering method) is particularly effective when applied to the KNN graph constructed from high-dimensional data.
   - For example, if **`n_neighbors=15`**, each cell is connected to its 15 closest cells in the `cell_embedding` space.
   - This information forms a **K-Nearest Neighbors (KNN) graph**, where:
     - Cells are the **nodes**.
@@ -69,3 +70,28 @@ The `cell_embedding` is, therefore, a **pre-computed lower-dimensional represent
 - Finally, UMAP takes this graph and projects it to 2D, ensuring that cells that are close in the 10-dimensional `cell_embedding` space remain close in the 2D UMAP space, and distant cells remain separated.
 
 This process ensures that the UMAP plot you see is a faithful 2D representation of the relationships encoded in the `cell_embedding`.
+
+### 3. ** Relationship Between the KNN Graph and the Leiden Algorithm **
+
+- **KNN Graph Construction:**
+
+The KNN graph captures the local similarity structure of the data, where each node (cell) is connected to its nearest neighbors. This graph is based on a lower-dimensional embedding of the original data (e.g., PCA or UMAP).
+
+- **Application of the Leiden Algorithm:**
+
+The Leiden algorithm uses this KNN graph as input and clusters the nodes (cells) based on the density of connections.
+By optimizing the modularity of the graph, the Leiden algorithm identifies groups of nodes (clusters) that are more connected internally than to the rest of the graph.
+UMAP Embedding for Visualization:
+
+UMAP can be used to visualize the clusters identified by the Leiden algorithm in a 2D or 3D space. UMAP preserves both local and global structure, showing the clusters as separate, often visually distinct groups in the embedding.
+
+- **Summary of the Process**
+Construct the KNN Graph:
+Uses the cell_embedding (e.g., from PCA or UMAP) to build the graph, capturing local relationships.
+
+Run the Leiden Algorithm:
+Clusters the KNN graph to identify groups of similar cells (nodes) based on connectivity patterns.
+
+Visualize Clusters with UMAP:
+Visualize the clusters in a reduced-dimensional space (UMAP) to explore the biological significance of the clusters.
+This combination of KNN graph construction, Leiden clustering, and UMAP visualization is a powerful workflow in single-cell RNA-seq analysis for identifying and interpreting cell populations or states.

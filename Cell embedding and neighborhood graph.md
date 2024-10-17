@@ -95,4 +95,5 @@ Clusters the KNN graph to identify groups of similar cells (nodes) based on conn
 
 Visualize Clusters with UMAP:
 Visualize the clusters in a reduced-dimensional space (UMAP) to explore the biological significance of the clusters.
+
 This combination of KNN graph construction, Leiden clustering, and UMAP visualization is a powerful workflow in single-cell RNA-seq analysis for identifying and interpreting cell populations or states.

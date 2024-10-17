@@ -87,16 +87,16 @@ UMAP can be used to visualize the clusters identified by the Leiden algorithm in
 
 ### Summary of the Process
 
-Generate cell embedding:
+1. Generate cell embedding:
 Dimensionality reduction techniques(PCA or pre-trained models) generate lower-dimensional representations of the cells that capture the relevant biological variation or relationships between cells in a more compact space compared to the original high-dimensional gene expression matrix.
 
-Construct the KNN Graph:
-Uses the cell_embedding (e.g., from PCA or UMAP) to build the graph, capturing local relationships.
+2. Construct the KNN Graph:
+Use the cell_embedding (e.g., from PCA or UMAP) to build the graph, capturing local relationships.
 
-Run the Leiden Algorithm:
+3. Run the Leiden Algorithm:
 Clusters the KNN graph to identify groups of similar cells (nodes) based on connectivity patterns.
 
-Visualize Clusters with UMAP:
+4. Visualize Clusters with UMAP:
 Visualize the clusters in a reduced-dimensional space (UMAP) to explore the biological significance of the clusters.
 
 This combination of KNN graph construction, Leiden clustering, and UMAP visualization is a powerful workflow in single-cell RNA-seq analysis for identifying and interpreting cell populations or states.

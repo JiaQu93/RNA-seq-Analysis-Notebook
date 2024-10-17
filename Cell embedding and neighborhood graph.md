@@ -86,6 +86,7 @@ UMAP Embedding for Visualization:
 UMAP can be used to visualize the clusters identified by the Leiden algorithm in a 2D or 3D space. UMAP preserves both local and global structure, showing the clusters as separate, often visually distinct groups in the embedding.
 
 - **Summary of the Process**
+  
 Construct the KNN Graph:
 Uses the cell_embedding (e.g., from PCA or UMAP) to build the graph, capturing local relationships.
 

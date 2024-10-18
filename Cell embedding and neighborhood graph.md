@@ -93,7 +93,7 @@ Dimensionality reduction techniques(PCA or pre-trained models) generate lower-di
 2. Construct the KNN Graph:
 Use the cell_embedding (e.g., from PCA or UMAP) to build the graph, capturing local relationships.
 
-3. Run the Leiden Algorithm:
+3. Run the Leiden Algorithm to identify clusters:
 Clusters the KNN graph to identify groups of similar cells (nodes) based on connectivity patterns.
 
 4. Visualize Clusters with UMAP:

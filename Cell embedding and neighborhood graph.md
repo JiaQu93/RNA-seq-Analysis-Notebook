@@ -83,7 +83,7 @@ The Leiden algorithm uses this KNN graph as input and clusters the nodes (cells)
 By optimizing the modularity of the graph, the Leiden algorithm identifies groups of nodes (clusters) that are more connected internally than to the rest of the graph.
 UMAP Embedding for Visualization:
 
-UMAP can be used to visualize the clusters identified by the Leiden algorithm in a 2D or 3D space. UMAP preserves both local and global structure, showing the clusters as separate, often visually distinct groups in the embedding.
+UMAP can be used to visualize the clusters identified by the Leiden algorithm in a 2D or 3D space. UMAP preserves both local and global structure, showing the clusters as separate, often visually distinct groups in the embedding. (The purpose of KNN is simply that UMAP uses a neighbor graph in its algorithm. It will change based on the parameters used such as the metric for calculating distance and the number of neighbors. Also note that UMAP is nothing more than a visualization. The purpose is to "see" the 20+ dimensionality PCA in 2 dimensions, and information will always be lost in this process. Further analysis like clustering are based on the PCA and neighbor graph and not the UMAP coordinates.)
 
 ### Summary of the Process
 

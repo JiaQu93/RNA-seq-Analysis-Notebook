@@ -1,6 +1,5 @@
 # Tutorial for bulk RNA-seq data preprocessing and analysis
-#### Compiled by Zhisong He
-#### Updated on 16 Oct 2024
+#### Updated on 09 May 2025
 ### Table of Content
   * [Introduction](#introduction)
   * [Preparation](#preparation)

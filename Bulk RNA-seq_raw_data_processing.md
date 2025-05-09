@@ -80,5 +80,14 @@ In this tutorial, we will retrieve the data we need from SRA. This is not only b
    ```
       
   
-      
+   Once the download is finished, you can list the files in your working directory and see whether you have all the files as expected ('wc -l'). They should all be named as [SRR Accession].fastq
+   
+   ```console
+   [qujia93@ascend-login02 Raw.data]$ ls -l *.fastq
+   -rw-rw----+ 1 qujia93 PAS2015 21969788302 May  7 16:12 SRR26891264_1.fastq
+   -rw-rw----+ 1 qujia93 PAS2015 21969788302 May  7 16:12 SRR26891264_2.fastq
+   -rw-rw----+ 1 qujia93 PAS2015 19084215314 May  7 15:04 SRR26891265_1.fastq
+   ...[skip the other lines]...
 
+   [qujia93@ascend-login02 Raw.data]$ ls -l *.fastq | wc -l
+   12

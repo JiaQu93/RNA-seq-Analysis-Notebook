@@ -46,33 +46,40 @@ In this tutorial, we will retrieve the data we need from SRA. This is not only b
 3) Create the bash file for downloading by SRA:
    ```console
    nano download_fastq.sh
-```
-Paste your script (like the one in your canvas).
-
-```console
-#!/bin/bash
-#SBATCH --job-name=download_fastq
-#SBATCH --account PAS2556
-#SBATCH --time=05:00:00
-#SBATCH --ntasks=1
-#SBATCH --output=download_fastq_%j.log
-#SBATCH --error=download_fastq_%j.err
-
-module load sratoolkit/3.0.2
-
-# List of accession numbers
-ACCESSIONS=("SRR26891264" "SRR26891265" "SRR26891266")
-
-# Download and convert each dataset into FASTQ format in the current directory
-for ACC in "${ACCESSIONS[@]}"; do
-    echo "Downloading $ACC..."
-    prefetch "$ACC" --output-directory .
-
-    echo "Converting $ACC to FASTQ..."
-    fasterq-dump "$ACC" -O .
-done
-```
-   #Save and exit: Press Ctrl+O → Enter to save. Press Ctrl+X to exit.
-
-   
    ```
+   Paste your script (like the one in your canvas).
+   
+   ```console
+   #!/bin/bash
+   #SBATCH --job-name=download_fastq
+   #SBATCH --account PAS2556
+   #SBATCH --time=05:00:00
+   #SBATCH --ntasks=1
+   #SBATCH --output=download_fastq_%j.log
+   #SBATCH --error=download_fastq_%j.err
+   
+   module load sratoolkit/3.0.2
+   
+   # List of accession numbers
+   ACCESSIONS=("SRR26891264" "SRR26891265" "SRR26891266")
+   
+   # Download 'prefetch' and convert 'fasterq-dump' each dataset into FASTQ format in the current directory
+   for ACC in "${ACCESSIONS[@]}"; do
+       echo "Downloading $ACC..."
+       prefetch "$ACC" --output-directory .
+   
+       echo "Converting $ACC to FASTQ..."
+       fasterq-dump "$ACC" -O .
+   done
+   ```
+   #Save and exit from nano: Press Ctrl+O → Enter to save. Press Ctrl+X to exit.
+
+5) Submit the bash file:
+   ```console
+   sbatch download_fastq.sh
+   squeue -u osc_username
+   ```
+      
+  
+      
+

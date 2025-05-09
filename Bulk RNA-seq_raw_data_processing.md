@@ -14,3 +14,34 @@
     * [2-2 Read mapping/pseudomapping and quantification](#2-2-read-mappingpseudomapping-and-quantification)
       * [2-2-1 Read mapping with STAR and data quantification](#2-2-1-read-mapping-with-star-and-data-quantification)
       * [2-2-2 Read pseudomapping with kallisto and data quantification](#2-2-2-read-pseudomapping-with-kallisto-and-data-quantification)
+
+
+## Preparation
+<sub><a href="#top">(Back to top)</a></sub></br>
+In this section, I will discuss basics before we even start preprocessing the RNA-seq data, so that you can make sure that you and your computer are both ready for the following steps. These basics include the following:
+Check the detailed steps of 1-5 from the notebook of QuaDBio (https://github.com/quadbio/RNAseq_tutorial/blob/main/Tutorial.md)
+1. Linux and [Bash (the Bourne Again SHell)](https://www.gnu.org/software/bash/), the most commonly used command line interface in Linux
+2. How to access a computing server via SSH
+3. How to use an HPC like Euler
+4. Conda and how to use it to install software needed for the data preprocessing
+
+5. SRA and how to retrieve public RNA-seq data
+### 1-5. Get the public RNA-seq data from SRA
+<sub><a href="#top">(Back to top)</a></sub></br>
+Now we have the computational environment ready for the preprocessing. We just need to data to start. As one can easily expect, there are two sources of data: the in-house data that are generated freshly by the lab for specific biological questions, and the public data which have been released and used for answer certain questions, but can be reanalyzed solely or together with other data for the same or related questions.
+
+There are several huge repositories in the world for high-throughput sequencing data. The major players include [NCBI Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra) by NCBI in the US, [European Nucleotide Archive (ENA)](https://www.ebi.ac.uk/ena/browser/home) by EMBL-EBI in the UK, and [DDBJ Sequence Read Archive (DRA)](https://www.ddbj.nig.ac.jp/dra/index-e.html) by the DDBJ Center in Japan. These three repositories are also members of International Nucleotide Sequence Database Collaboration (INSDC), and cross-backup each other, meaning that data submitted to any one of the three databases are also accessible from the other two.
+
+>**NOTE**
+>While majority of the high-throughput sequencing data are archived in these three databases, there are also other emerging sequencing data repositories, though most of them are regional, mostly used by researchers in the host country. Examples include [Genome Sequencing Archive (GSA)](https://ngdc.cncb.ac.cn/gsa/) by NGDC, and [CNGA Sequence Archive (CNSA)](https://db.cngb.org/cnsa/) by CNGB, both located in China.
+
+In this tutorial, we will retrieve the data we need from SRA. This is not only because the data we are going to use are archived at SRA, but also because of SRA-Toolkit which provides a simple way to download data given the accession numbers of the needed samples.
+
+- SRA Toolkit: OSC gives a software usage of SRA (https://www.osc.edu/resources/available_software/software_list/sra_toolkit)
+  1) Open the terminal of Ascend
+  2) View available modules:
+ 
+```console
+ module spider sratoolkit
+```
+

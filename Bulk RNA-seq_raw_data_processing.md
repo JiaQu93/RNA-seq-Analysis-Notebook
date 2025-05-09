@@ -38,10 +38,13 @@ There are several huge repositories in the world for high-throughput sequencing 
 In this tutorial, we will retrieve the data we need from SRA. This is not only because the data we are going to use are archived at SRA, but also because of SRA-Toolkit which provides a simple way to download data given the accession numbers of the needed samples.
 
 - SRA Toolkit: OSC gives a software usage of SRA (https://www.osc.edu/resources/available_software/software_list/sra_toolkit)
-  1) Open the terminal of Ascend
-  2) View available modules:
- 
-```console
- module spider sratoolkit
-```
-
+1) Open the terminal of Ascend
+2) View available modules:
+   ```console
+   module spider sratoolkit
+   ```
+3) Create the bash file for downloading by SRA:
+   ```console
+   nano download_fastq.sh
+   # Paste your script (like the one in your canvas). Save and exit: Press Ctrl+O → Enter to save. Press Ctrl+X to exit.
+   ```

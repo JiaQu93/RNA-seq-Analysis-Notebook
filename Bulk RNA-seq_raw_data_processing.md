@@ -186,14 +186,13 @@ Each row represents a fastq file (single-end) or a pair of fastq files (paired-e
 2) Then, you can run the pipeline using:
 First, checking the version of nf-core/rnaseq in OSC
 ``` console
-module spider 
+module spider nextflow
 ```
-Then, create a .sh file and specify the current version of nf-core/rnaseq (module load nextflow/24.10.4
+Then, create a .sh file and specify the current version of nextflow (module load nextflow/24.10.4
 ) in your .sh file:
 ```console
    nano BulkRNA_Alignment.sh
 ```
-
 ```console
 #!/bin/bash
 #SBATCH --job-name=BulkRNA_Alignment
@@ -212,6 +211,7 @@ nextflow run nf-core/rnaseq \
     --genome GRCm38 \
 -profile singularity
 ```
+Submit sbatch file
 ```console
 sbatch BulkRNA_Alignment.sh
 squeue -u osc_username # check the running job 

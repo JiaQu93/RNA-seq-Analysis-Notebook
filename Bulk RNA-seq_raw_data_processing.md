@@ -142,7 +142,9 @@ Now we have the tools ready, and the data ready. It is time to move on to the ne
 
 (If you want to use the specific tool for each step, please check https://github.com/quadbio/RNAseq_tutorial/blob/main/Tutorial.md?plain=1), introducing more detailed information about RNA-seq data preprocessing.)
 
-Here, we introduce **nf-core/rnaseq**, a bioinformatics pipeline that can be used to analyse RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, **performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report**.
+Here, we introduce **nf-core/rnaseq**, a bioinformatics pipeline that can be used to analyse RNA sequencing data obtained from organisms with a reference genome and annotation. (https://nf-co.re/rnaseq/3.14.0/) 
+
+It takes a samplesheet and FASTQ files as input, **performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report**.
 
 # Data
 RNASeq data (fastq.gz) 
@@ -169,20 +171,9 @@ RNAseq_naive_WT1,"	SRR26891269_R1.fastq.gz","	SRR26891269_R2.fastq.gz",auto
 RNAseq_naive_WT2,"	SRR26891268_R1.fastq.gz","	SRR26891268_R2.fastq.gz",auto
 RNAseq_naive_WT3,"	SRR26891267_R1.fastq.gz","	SRR26891267_R2.fastq.gz",auto
 ```
-
-# Data
-RNASeq data (fastq or fastq.gz)
-# Input format
-Prepare a samplesheet.csv file with your input data that looks as follows (you can use 'auto' if you do not know the strandedness):
-1) First, prepare a **samplesheet.csv** file with your input data that looks as follows (you can use 'auto' if you do not know the strandedness):
-``` console
-sample,fastq_1,fastq_2,strandedness
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,auto
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,auto
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,auto
-```
 Each row represents a fastq file (single-end) or a pair of fastq files (paired-end). Rows with the same sample identifier are considered technical replicates and merged automatically. The strandedness refers to the library preparation and will be automatically inferred if set to auto.
 >Warning: Please provide pipeline parameters via the CLI or Nextflow -params-file option. Custom config files, including those provided by the -c Nextflow option, can be used to >provide any configuration except for parameters; see docs.
+
 2) Then, you can run the pipeline using:
 First, checking the version of nf-core/rnaseq in OSC
 ``` console
@@ -216,7 +207,9 @@ Submit sbatch file
 sbatch BulkRNA_Alignment.sh
 squeue -u osc_username # check the running job 
 ```
+For more details and further functionality, please refer to the usage documentation and the parameter documentation.
 
+# Pipeline output
+To see the results of an example test run with a full-size dataset, refer to the results tab on the nf-core website pipeline page. For more details about the output files and reports, please refer to the output documentation. (https://nf-co.re/rnaseq/output)
 
-Footer
-
+This pipeline quantifies RNA-sequenced reads relative to genes/transcripts in the genome and normalizes the resulting data. It does not compare the samples statistically in order to assign significance in the form of FDR or P-values. For downstream analyses, the output files from this pipeline can be analysed directly in statistical environments like R, Julia or via the nf-core/differentialabundance pipeline.

@@ -140,68 +140,70 @@ Now we have the tools ready, and the data ready. It is time to move on to the ne
 3. Gene expression quantification for samples
 4. Generate the expression matrix with sample metadata table for the following analysis
 
+(If you want to use the specific tool for each step, please check https://github.com/quadbio/RNAseq_tutorial/blob/main/Tutorial.md?plain=1), introducing more detailed information about RNA-seq data preprocessing.)
 
-### 2-1 Quality control of RNA-seq data
-<sub><a href="#top">(Back to top)</a></sub></br>
-Before actually processing the data, it is important to make sure that the data is of high quality.
-
-The quality of a RNA-seq data contains different aspects. The sequencing quality, represented by the quality score for each base in each read, is one of the very first thing one should consider. It varies from one base to another base, and from one read to another. We can therefore look at the distribution of the Q score per loci across all reads. Usually the sequencing reads have relatively low quality on the two sides (especially the end) and higher quality in the middle, and this is the reason why we look at the per loci quality distribution across reads. Another reason to look at that is because if it is indeed the case that the start and/or the end of reads systematically have too low quality, one can easily fix it by trimming the first and the last bases of all the reads. This will be mentioned in more details later.
-
-Other quality metrics are more related to the sample and cDNA library quality. For instance, the adapter ligantion is a critical part during the cDNA library preparation and cases can happen that multiple adapters are ligated to the sequence and therefore become parts of the sequenced reads. This would introduce troubles later when we need to locate the transcript(s) that the read represents, as the extra adapter sequences are not a part of the transcripts and would introduce a large mismatch. Another example is the complexity of the data. Ribosomal RNA (rRNA) makes up about 80% of cellular RNA, while the rRNA genes only makes up 0.5% of the human genome, and their abundances are not very relevant to many biological processes to study. Therefore, there is usually a step of mRNA enrichment (by Oligo-T sequences) or rRNA depletion to effectively capture the more informative non-rRNA transcript fractions. However, this is not always working efficiently and the cDNA library would present a low complexity if the rRNA portion is not effectively reduced. Also, there could be reads representing pure ligation products of multiple sequencing adapter, which also dramatically reduce the library complexity.
-
-[FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a tool providing a simple way to do some quality control checks on the sequencing data. It checks different aspect of data quality and provides a graphical report so that one can intuitively get the idea about the data quality. The tool contains both GUI and CLI, therefore one can choose to either run it by clicking buttons with mouse or with commands.
-
-To run it in the command line, it is very simple. This is an example:
-```console
-cd [the scratch folder]
-cd rawdata
-mkdir fastqc
-fastqc -o fastqc *.fastq.gz
-```
->**NOTE**
->The `-o` option in the `fastqc` command specifies the output directory to put the output files. By default it stores the output files to the same folder as the FASTQ files. In the example script, a new folder is created to store just the FastQC reports. This is not a must, but will likely help to make it more tidy.
-
-If you prefer GUI, you can also directly run `fastqc` to open the GUI in the server. If everything goes well you would be able to see the FastQC window poping up. Then you can open one or more FASTQ files by selecting from the menu `File` -> `Open...`. After getting the report that's shown in the window, you can save it, also two files just as the command line version, by choosing from the menu `File` -> `Save report...`.
-
->**NOTE**
->Please note that to see the GUI at your personal computer, you need to make the X11 forwarding possible. [X11](https://en.wikipedia.org/wiki/X_Window_System) is a windowing system for bitmap displays, proving the basic framework for a GUI environment and is commonly used in Linux. To allow the X11 to work via SSH-based remote access, there are several things one would need to do:
->* For macOS users, make sure to add the `-Y` option when running the `ssh` command. It means to use `ssh -Y <username>@bs-studentsvr04` to login the bs-studentsvr04 server, for instance. Also, you need to make sure that XQuartz, the X11 system that runs on macOS, is installed.
->* For Windows users using PuTTY, it is more complicated. First of all, you need to make sure that [Xming](http://www.straightrunning.com/XmingNotes/) or any other X11 server for Windows is installed, and being opened. And then in PuTTY, after filling in the server information at the starting page, from the option menu on the left hand side, choose "Connection" -> "SSH" -> "X11". There you shall click the "Enable X11 forwarding". Afterwards click the "Open" button to start the connection.
->* The newest Xming is not free, but needs £10 "donation" to get the download password. Its older version, however, is available at [sourceforge.net](https://sourceforge.net/projects/xming/files/Xming/6.9.0.31/Xming-6-9-0-31-setup.exe/download) for free.
-
-For each FASTQ file there are two output files generated by default. Assume the FASTQ file is called `[filename].fastq` or `[filename].fastq.gz`, then one output file is called "[filename]_fastqc.html" and the other one called "[filename]_fastqc.zip". The HTML file is a report which can be opened with your browser, and it contains the summary of all the quality metrics, as well as a grade by the software on each perspective whether it is passed, warning, or failed. The ZIP file, once decompressed, contains also the HTML report, as well as plain text files with the same information.
-
-This is an example screenshot of the HTML report when being opened in the browser:
-
-<p align="center"><img src="img/fastqc.png" /></p>
-
-It is important to mention that some of the grades are made assuming the data to be whole-genome DNA sequencing. For instance, the "Per sequence GC content" compares the distribution of G/C bases proportion per read to a theoretical distribution derived from the whole genome, which is expected to be different from the GC content of transcriptome. From my personal experience, the "Per base sequence content" and "Per sequence GC content" are the two sections that easily get the warning for failed grade for RNA-seq data, but can be ignored if other sections are fine. In addition, the "Sequence Duplication Levels" is another section that could give out warning of RNA-seq data, while it may or may not be a problem that needs to be solved later.
-
-Meanwhile, the sections that I would suggest to pay attention to for RNA-seq data include "Per base sequence quality", "Sequence Duplication Levels", "Overrepresented sequences" and "Adapter Content". They represent potential We will need to try to fix the problem if they get a failed grade:
-* If any read locus shows low quality (e.g. median <20 or even <10) in the "Per base sequence quality" section, especially at the two ends, we should try to trim them if the low-quality part is large (>10 bases), either by all reads removing the same number of bases or different number per read based on the quality scores.
-* Since different transcripts have very different abundance, to make sure that very lowly expressed transcripts are also detected, it is possible that the highly expressed transcripts are over-amplified and/or over-sequenced, resulting in warning of "Sequence Duplication Levels". In this case, a de-duplication step may be wanted to collapse the identical reads into one.
-* For standard mRNA-seq data with oligoT enrichment, problems of "Overrepresented sequences" and "Adapter Content" often come together and represent the adapter ligation issue mentioned above. We can try to cut the adapter sequences from reads later.
-
-For the example shown in the screenshot above, we don't need to do anything as it looks all good.
-
-**IMPORTANT NOTE**: It is not always necessary to do anything here even if problems were found, especially those related to base quality. For instance, many up-to-date software being used later for read mapping (e.g. STAR) has implemented a soft trimming mechanism to deal with low-quality bases at the end of a read.
-
-
-### 2-2 Read mapping/pseudomapping and quantification
-<sub><a href="#top">(Back to top)</a></sub></br>
-#### 2-2-1 Read mapping and data quantification 
-(If you want to use the STAR tool, please check https://github.com/quadbio/RNAseq_tutorial/blob/main/Tutorial.md?plain=1)
-
-Here, we introduce nf-core/rnaseq, a bioinformatics pipeline that can be used to analyse RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report.
+Here, we introduce **nf-core/rnaseq**, a bioinformatics pipeline that can be used to analyse RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, **performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report**.
 
 # Data
-RNASeq data (fastq or fastq.gz)
+RNASeq data (fastq.gz) 
+>**NOTE**
+> If the raw data is stored as .fastq files (e.g. uncompressed by sratoolkit), the .fastq files should be compressed to .fastq.gz files:
+``` console
+#!/bin/bash
+#SBATCH --job-name=gzip
+#SBATCH --output="%j_log.txt"
+#SBATCH --account=PAS2556
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=80G
+#SBATCH --time=40:00:00
+
+gzip *.fastq
+```
+
 # Input format
-Prepare a samplesheet.csv file with your input data that looks as follows (you can use 'auto' if you do not know the strandedness):
+1) First, prepare a **samplesheet.csv** file with your input data that looks as follows (you can use 'auto' if you do not know the strandedness):
+``` console
 sample,fastq_1,fastq_2,strandedness
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,auto
 CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,auto
 CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,auto
+```
+Each row represents a fastq file (single-end) or a pair of fastq files (paired-end). Rows with the same sample identifier are considered technical replicates and merged automatically. The strandedness refers to the library preparation and will be automatically inferred if set to auto.
+>Warning: Please provide pipeline parameters via the CLI or Nextflow -params-file option. Custom config files, including those provided by the -c Nextflow option, can be used to >provide any configuration except for parameters; see docs.
 
+2) Then, you can run the pipeline using:
+First, checking the version of nf-core/rnaseq in OSC
+``` console
+module spider 
+```
+Then, create a .sh file and specify the current version of nf-core/rnaseq (module load nextflow/24.10.4
+) in your .sh file:
+```console
+   nano BulkRNA_Alignment.sh
+```
+
+```console
+#!/bin/bash
+#SBATCH --job-name=BulkRNA_Alignment
+#SBATCH --output="%j_log.txt"
+#SBATCH --account=PAS2556
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=80G
+#SBATCH --time=40:00:00
+
+module load nextflow/24.10.4
+
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --outdir /fs/ess/PAS2556/Bioinformatics_analysis/BulkRNA/Data/05082025/Alignment_output  \
+    --genome GRCm38 \
+-profile singularity
+```
+```console
+sbatch BulkRNA_Alignment.sh
+squeue -u osc_username # check the running job 
+```
 
 

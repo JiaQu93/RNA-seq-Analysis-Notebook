@@ -162,11 +162,61 @@ gzip *.fastq
 ```
 
 # Input format
-Prepare a **samplesheet.csv** file with your input data that looks as follows (you can use 'auto' if you do not know the strandedness):
+Prepare a **samplesheet.csv** file with your input data (use 'auto' if you do not know the strandedness):
+```console
+sample,fastq_1,fastq_2,strandedness
+RNAseq_naive_WT1,"	SRR26891269_R1.fastq.gz","	SRR26891269_R2.fastq.gz",auto
+RNAseq_naive_WT2,"	SRR26891268_R1.fastq.gz","	SRR26891268_R2.fastq.gz",auto
+RNAseq_naive_WT3,"	SRR26891267_R1.fastq.gz","	SRR26891267_R2.fastq.gz",auto
+```
+
+# Data
+RNASeq data (fastq or fastq.gz)
+# Input format
+Prepare a samplesheet.csv file with your input data that looks as follows (you can use 'auto' if you do not know the strandedness):
+1) First, prepare a **samplesheet.csv** file with your input data that looks as follows (you can use 'auto' if you do not know the strandedness):
+``` console
 sample,fastq_1,fastq_2,strandedness
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,auto
 CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,auto
 CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,auto
+```
+Each row represents a fastq file (single-end) or a pair of fastq files (paired-end). Rows with the same sample identifier are considered technical replicates and merged automatically. The strandedness refers to the library preparation and will be automatically inferred if set to auto.
+>Warning: Please provide pipeline parameters via the CLI or Nextflow -params-file option. Custom config files, including those provided by the -c Nextflow option, can be used to >provide any configuration except for parameters; see docs.
+2) Then, you can run the pipeline using:
+First, checking the version of nf-core/rnaseq in OSC
+``` console
+module spider 
+```
+Then, create a .sh file and specify the current version of nf-core/rnaseq (module load nextflow/24.10.4
+) in your .sh file:
+```console
+   nano BulkRNA_Alignment.sh
+```
+
+```console
+#!/bin/bash
+#SBATCH --job-name=BulkRNA_Alignment
+#SBATCH --output="%j_log.txt"
+#SBATCH --account=PAS2556
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=80G
+#SBATCH --time=40:00:00
+
+module load nextflow/24.10.4
+
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --outdir /fs/ess/PAS2556/Bioinformatics_analysis/BulkRNA/Data/05082025/Alignment_output  \
+    --genome GRCm38 \
+-profile singularity
+```
+```console
+sbatch BulkRNA_Alignment.sh
+squeue -u osc_username # check the running job 
+```
 
 
+Footer
 

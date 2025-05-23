@@ -1,0 +1,48 @@
+
+
+
+```{r}
+# Install BiocManager if not already installed
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+# Install remotes for GitHub installs
+if (!requireNamespace("remotes", quietly = TRUE))
+    install.packages("remotes")
+
+# Define list of CRAN packages
+cran_packages <- c(
+  "dplyr", "ggplot2", "cowplot", "here", "RColorBrewer", 
+  "tidyr", "R.utils", "qs", "readxl"
+)
+
+# Install CRAN packages
+install.packages(setdiff(cran_packages, rownames(installed.packages())))
+
+# Install Seurat (from CRAN or GitHub depending on version needs)
+if (!requireNamespace("Seurat", quietly = TRUE))
+    install.packages("Seurat")
+
+# Install SeuratData
+if (!requireNamespace("SeuratData", quietly = TRUE))
+    remotes::install_github("satijalab/seurat-data")
+
+# Install Polychrome
+if (!requireNamespace("Polychrome", quietly = TRUE))
+    install.packages("Polychrome")
+
+# Install harmony
+if (!requireNamespace("harmony", quietly = TRUE))
+    remotes::install_github("immunogenomics/harmony")
+
+# Install dittoSeq from Bioconductor
+if (!requireNamespace("dittoSeq", quietly = TRUE))
+    BiocManager::install("dittoSeq")
+
+# Install hdf5r (if HDF5 is set up on your system)
+if (!requireNamespace("hdf5r", quietly = TRUE))
+    install.packages("hdf5r")
+
+install.packages("hdf5r")
+
+```

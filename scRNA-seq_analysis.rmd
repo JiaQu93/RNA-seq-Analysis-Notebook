@@ -1,7 +1,6 @@
 
-
-
-```{r}
+## Install packages
+```{r message=FALSE,warning=FALSE}
 # Install BiocManager if not already installed
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
@@ -44,5 +43,36 @@ if (!requireNamespace("hdf5r", quietly = TRUE))
     install.packages("hdf5r")
 
 install.packages("hdf5r")
+
+```
+
+
+## Load the required libraries
+```{r message=FALSE,warning=FALSE}
+library(dplyr)
+library(Seurat)
+library(SeuratData)
+library(patchwork)
+dyn.load('/apps/hdf5/gnu/9.1/openmpi/4.0/1.12.0/lib/libhdf5_hl.so.200')
+library(hdf5r)
+library(ggplot2)
+library(cowplot)
+library(here)
+library(Polychrome)
+library(harmony)
+library(dittoSeq)
+library(RColorBrewer)
+library(tidyr)
+sample_color <- colorRampPalette(brewer.pal(12, "Paired"))(12)
+library(R.utils)
+library(qs)
+library("readxl")
+library(hdf5r)
+
+setwd("/fs/ess/PAS2556/Bioinformatics_analysis/Aging.DRG/Data/Raw.counts.data")
+gunzip("GSE154659_C57_Raw_counts.RDS.gz", remove = FALSE)
+
+dyn.load('/apps/hdf5/gnu/9.1/openmpi/4.0/1.12.0/lib/libhdf5_hl.so.200')
+
 
 ```

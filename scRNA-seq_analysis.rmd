@@ -1,5 +1,5 @@
 
-## Install packages
+# Install packages
 ```{r message=FALSE,warning=FALSE}
 # Install BiocManager if not already installed
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -47,7 +47,7 @@ install.packages("hdf5r")
 ```
 
 
-## Load the required libraries
+# Load the required libraries
 ```{r message=FALSE,warning=FALSE}
 library(dplyr)
 library(Seurat)
@@ -72,7 +72,11 @@ dyn.load('/apps/hdf5/gnu/9.1/openmpi/4.0/1.12.0/lib/libhdf5_hl.so.200')
 
 setwd("/fs/ess/PAS2556/Bioinformatics_analysis/Aging.DRG/Data/Raw.counts.data")
 gunzip("GSE154659_C57_Raw_counts.RDS.gz", remove = FALSE)
-
-
-
 ```
+
+# Download the dataset
+Go to OSC terminal, download the file directly via terminal using wget:
+wget "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE201586&format=file&file=GSE201586%5Fhumanallcelltypes%2Erds%2Egz" -O GSE201586_humanallcelltypes.rds.gz
+
+
+

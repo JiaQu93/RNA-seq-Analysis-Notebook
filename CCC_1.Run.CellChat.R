@@ -1,3 +1,7 @@
+# Note ------------------------------------------------------------------
+# Tutorial for "Inference and analysis of cell-cell communication using CellChat" (https://htmlpreview.github.io/?https://github.com/jinworks/CellChat/blob/master/tutorial/CellChat-vignette.html)
+
+
 # Set environment: load the required libraries ---------------------------------
 #install.packages("BiocManager")
 #BiocManager::install("BiocNeighbors")
